@@ -19,7 +19,17 @@ export default function App(){
   const [selectedNode,setSelectedNode]=useState<string|null>(null);
   const [levelTab,setLevelTab]=useState<'simple'|'technical'|'interview'>('simple');
   const [toast,setToast]=useState('');
+  const [theme,setTheme]=useState<'light'|'dark'>(()=>{
+    const saved=window.localStorage.getItem('pl-theme');
+    if(saved==='light'||saved==='dark') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  });
   useEffect(()=>saveState(state),[state]);
+  useEffect(()=>{
+    document.documentElement.dataset.theme=theme;
+    document.documentElement.style.colorScheme=theme;
+    window.localStorage.setItem('pl-theme',theme);
+  },[theme]);
   function notify(text:string){setToast(text);window.setTimeout(()=>setToast(''),2300)}
   function openLesson(id:string){const l=concepts.find(x=>x.id===id);if(l){setActiveLesson(l);setPage('concepts');setLevelTab('simple');setSelectedNode(null)}}
   const nav:[Page,string,string][]=[['home','Overview','⌂'],['project','Projects','◇'],['concepts','Knowledge map','⌘'],['interview','Interview gym','◉'],['incidents','Incident lab','⚑'],['simulators','Simulations','⌁'],['rebuild','Final boss','✳'],['portfolio','Project story','↗']];
@@ -30,7 +40,7 @@ export default function App(){
       <nav>{nav.map(([id,label,icon])=><button key={id} className={`nav-item ${page===id?'active':''}`} onClick={()=>setPage(id)}><Icon>{icon}</Icon>{label}{id==='interview'&&<span className="nav-count">100</span>}</button>)}</nav>
       <div className="sidebar-bottom"><div className="mini-progress"><div className="sidebar-label">V1 CASE STUDY</div><strong>{percentFor(state,concepts.map(x=>x.id))}%</strong><div className="progress-track"><i style={{width:`${percentFor(state,concepts.map(x=>x.id))}%`}}/></div><small>{state.completed.filter(x=>x.startsWith('all-media-downloader:')).length} lessons completed</small></div><div className="privacy"><span className="green-dot"/>Saved on this device</div></div>
     </aside>
-    <main className="main-area"><header className="topbar"><div className="breadcrumb">Learning platform <span>/</span> <b>{nav.find(x=>x[0]===page)?.[1]}</b></div><div className="top-right"><span className="online"><i/> Local learning mode</span><button className="avatar" title="Your local progress">G</button></div></header>
+    <main className="main-area"><header className="topbar"><div className="breadcrumb">Learning platform <span>/</span> <b>{nav.find(x=>x[0]===page)?.[1]}</b></div><div className="top-right"><span className="online"><i/> Local learning mode</span><button className="theme-toggle" type="button" aria-label={`Switch to ${theme==='dark'?'light':'dark'} mode`} title={`Switch to ${theme==='dark'?'light':'dark'} mode`} onClick={()=>setTheme(theme==='dark'?'light':'dark')}><span aria-hidden="true">{theme==='dark'?'☀':'☾'}</span><b>{theme==='dark'?'Light':'Dark'}</b></button><button className="avatar" title="Your local progress">G</button></div></header>
       <div className="page-content">
         {page==='home'&&<Home state={state} setPage={setPage} openLesson={openLesson}/>}
         {page==='project'&&<ProjectPage state={state} onNode={(id)=>setSelectedNode(id)} openLesson={openLesson}/>}
