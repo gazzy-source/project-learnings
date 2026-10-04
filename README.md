@@ -2,6 +2,10 @@
 
 **Learn software engineering through systems you actually built.**
 
+## Live
+
+[Open Project Learnings](https://project-learnings.netlify.app)
+
 Project Learnings is a personal interactive engineering knowledge base built from real repositories. It connects **code → production behavior → computer-science concepts → system design → interview reasoning**. It is designed to grow across projects rather than become a one-project tutorial.
 
 The learner already programs and knows some OS, networking and DBMS fundamentals. Lessons skip syntax basics and connect familiar ideas—threads to OS scheduling, HTTP to network failure, SQLite locks to DBMS concurrency, cgroups to process resource control—to actual code and operations.
