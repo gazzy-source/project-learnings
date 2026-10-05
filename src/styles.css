@@ -457,7 +457,7 @@ input[type="range"]{width:100%;min-height:24px;accent-color:var(--accent)}
 /* Responsive behavior */
 @media(max-width:1100px){
  .sidebar{width:220px}.main-area{margin-left:220px}
- .app-shell.sidebar-collapsed .sidebar{width:72px}.app-shell.sidebar-collapsed .main-area{margin-left:72px}
+ .app-shell.sidebar-collapsed .sidebar{width:72px}.app-shell.sidebar-collapsed .main-area{margin-left:72px}.sidebar-toggle{width:40px;justify-content:center;padding:6px}.sidebar-toggle b{display:none}.breadcrumb span{display:none}.breadcrumb b{white-space:nowrap}.online{display:none}.theme-toggle{white-space:nowrap;padding:6px 10px}.theme-toggle b{display:none}.nav-item>span:not(.icon):not(.nav-count){white-space:nowrap}.nav-count{display:none}
  .architecture-board{grid-template-columns:1fr}.support-panel{padding:20px 0 0;border-top:1px solid var(--border);border-left:0}
  .concept-layout.index-open{grid-template-columns:210px minmax(0,1fr);gap:24px}
 }
