@@ -14,6 +14,10 @@ describe('learning site navigation and study state',()=>{
   it('navigates into the concept library and records a lesson as read',()=>{
     const nav=[...container.querySelectorAll('aside nav button')].find(x=>x.textContent?.includes('Knowledge map')) as HTMLButtonElement;
     act(()=>nav.click());
+    const browse=container.querySelector('.concept-index-toggle') as HTMLButtonElement;
+    expect(browse.getAttribute('aria-expanded')).toBe('false');
+    act(()=>browse.click());
+    expect(browse.getAttribute('aria-expanded')).toBe('true');
     expect(container.textContent).toContain('SHARED CONCEPT LIBRARY');
     const done=[...container.querySelectorAll('button')].find(x=>x.textContent?.includes('Mark as read')) as HTMLButtonElement;
     act(()=>done.click());
@@ -53,4 +57,24 @@ describe('learning site navigation and study state',()=>{
     expect(document.documentElement.dataset.theme).toBe('dark');
     expect(toggle.getAttribute('aria-label')).toBe('Switch to light mode');
   });
+  it('collapses and remembers the desktop navigation preference',()=>{
+    const toggle=container.querySelector('.sidebar-toggle') as HTMLButtonElement;
+    expect(toggle.getAttribute('aria-label')).toBe('Collapse navigation');
+    act(()=>toggle.click());
+    expect(container.querySelector('.app-shell')?.classList.contains('sidebar-collapsed')).toBe(true);
+    expect(localStorage.getItem('pl-sidebar-collapsed.v1')).toBe('true');
+    expect(toggle.getAttribute('aria-label')).toBe('Expand navigation');
+  });
+  it('opens a temporary mobile drawer and closes it after navigation',()=>{
+    const menu=container.querySelector('.mobile-menu-toggle') as HTMLButtonElement;
+    act(()=>menu.click());
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
+    expect(container.querySelector('.sidebar')?.classList.contains('mobile-open')).toBe(true);
+    const destination=[...container.querySelectorAll('aside nav button')].find(x=>x.textContent?.includes('Interview gym')) as HTMLButtonElement;
+    act(()=>destination.click());
+    expect(menu.getAttribute('aria-expanded')).toBe('false');
+    expect(container.querySelector('.sidebar')?.classList.contains('mobile-open')).toBe(false);
+    expect(container.textContent).toContain('100 QUESTIONS');
+  });
+
 });
