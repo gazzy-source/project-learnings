@@ -23,6 +23,28 @@ describe('learning site navigation and study state',()=>{
     act(()=>done.click());
     expect(localStorage.getItem('project-learnings.progress.v1')).toContain('all-media-downloader:processes');
   });
+  it('teaches backpressure through prediction, simulation and a grounded interview answer',()=>{
+    const nav=[...container.querySelectorAll('aside nav button')].find(x=>x.textContent?.includes('Knowledge map')) as HTMLButtonElement;
+    act(()=>nav.click());
+    act(()=>(container.querySelector('.concept-index-toggle') as HTMLButtonElement).click());
+    const item=[...container.querySelectorAll('.concept-list button')].find(x=>x.textContent?.includes('Admission control & backpressure')) as HTMLButtonElement;
+    act(()=>item.click());
+    expect(container.textContent).toContain('Requests');
+    expect(container.textContent).toContain('grows +9 / second');
+    expect(container.textContent).toContain('DownloadQueue');
+    expect(container.textContent).toContain('waiting list has no hard length cap');
+    expect(container.querySelector('[role="tablist"]')).toBeNull();
+    expect(container.textContent).toContain('100 MiB shared in-flight byte budget');
+    act(()=>[...container.querySelectorAll('.bp-prediction-options button')][0].dispatchEvent(new MouseEvent('click',{bubbles:true})));
+    expect(container.textContent).toContain('Completions arrive 4 per minute faster');
+    expect(container.textContent).toContain('about 20 completed files would be waiting after 5 minutes');
+    act(()=>([...container.querySelectorAll('button')].find(x=>x.textContent?.includes('Reveal example answer')) as HTMLButtonElement).click());
+    expect(container.textContent).toContain('How did you implement backpressure in your downloader?');
+    expect(container.textContent).toContain('The waiting queue itself is not hard-bounded');
+    const answer=container.querySelector('#apply-answer') as HTMLTextAreaElement;
+    act(()=>{Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value')?.set?.call(answer,'Bound admission and return a retryable response');answer.dispatchEvent(new Event('input',{bubbles:true}));answer.dispatchEvent(new Event('change',{bubbles:true}))});
+    expect(localStorage.getItem('project-learnings.apply.v1:backpressure')).toContain('Bound admission');
+  });
   it('switches to interview training and exposes the 100-question bank',()=>{
     const nav=[...container.querySelectorAll('aside nav button')].find(x=>x.textContent?.includes('Interview gym')) as HTMLButtonElement;
     act(()=>nav.click());
